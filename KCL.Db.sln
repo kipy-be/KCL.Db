@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "KCL.Db.TestApp\TestApp.csproj", "{43C8A12B-B04C-477C-9504-F156613FC99A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KCL.Db", "KCL.Db\KCL.Db.csproj", "{4B204B31-64F0-4F2F-BAD5-409F14C2C587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KCL.Db.Pgsql", "KCL.Db.Pgsql\KCL.Db.Pgsql.csproj", "{2F4BFB75-2B9C-456B-B1D8-43053FCF4FF0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43C8A12B-B04C-477C-9504-F156613FC99A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43C8A12B-B04C-477C-9504-F156613FC99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43C8A12B-B04C-477C-9504-F156613FC99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43C8A12B-B04C-477C-9504-F156613FC99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B204B31-64F0-4F2F-BAD5-409F14C2C587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B204B31-64F0-4F2F-BAD5-409F14C2C587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B204B31-64F0-4F2F-BAD5-409F14C2C587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B204B31-64F0-4F2F-BAD5-409F14C2C587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F4BFB75-2B9C-456B-B1D8-43053FCF4FF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F4BFB75-2B9C-456B-B1D8-43053FCF4FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F4BFB75-2B9C-456B-B1D8-43053FCF4FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F4BFB75-2B9C-456B-B1D8-43053FCF4FF0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
