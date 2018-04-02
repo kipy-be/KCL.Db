@@ -6,13 +6,13 @@ namespace TestApp.Services
 {
     public class ArticlesService : ServiceBase
     {
-        public ArticlesService(DbService db)
+        public ArticlesService(DbInterface db)
             : base(db)
         {}
 
         public Article GetFromId(int id)
         {
-            return _db.DbInterface.ParseOne<Article>
+            return _db.ParseOne<Article>
             (
                 "SELECT " +
                     "art.id, " +

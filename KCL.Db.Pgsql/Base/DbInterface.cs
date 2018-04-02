@@ -5,7 +5,7 @@ using NpgsqlTypes;
 
 namespace KCL.Db.Pgsql
 {
-    internal class DbInterface : DbInterfaceBase
+    public class DbInterface : DbInterfaceBase
     {
         public DbInterface(string connectionString)
             : base(connectionString)

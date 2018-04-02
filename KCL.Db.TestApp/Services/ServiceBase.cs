@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TestApp.Services
 {
     public abstract class ServiceBase
     {
-        protected DbService _db;
+        protected DbInterface _db;
 
-        public ServiceBase(DbService db)
+        public ServiceBase(DbInterface db)
         {
             _db = db;
         }

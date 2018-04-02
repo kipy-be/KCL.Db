@@ -37,4 +37,22 @@ namespace KCL.Db.Entity
             : base(message, inner)
         { }
     }
+
+    internal class DbQueryException : Exception
+    {
+        public DbQueryException()
+        { }
+
+        public DbQueryException(string message)
+            : base(message)
+        { }
+
+        public DbQueryException(string message, params object[] obj)
+            : base(String.Format(message, obj))
+        { }
+
+        public DbQueryException(string message, Exception inner)
+            : base(message, inner)
+        { }
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using KCL.Db.Entity;
+using KCL.Db.Entity.Query;
 
 namespace KCL.Db
 {
@@ -24,6 +25,8 @@ namespace KCL.Db
         TEntity ParseOne<TEntity>(string query, Dictionary<string, object> parameters) where TEntity : DbEntity<TEntity>, new();
         void Update<TEntity>(TEntity entity) where TEntity : DbEntity<TEntity>;
         void UpdateWhere<TEntity>(IEnumerable<KeyValuePair<string, object>> set, IEnumerable<KeyValuePair<string, object>> where) where TEntity : DbEntity<TEntity>;
+
+        DbQuery<TEntity> Select<TEntity>() where TEntity : DbEntity<TEntity>, new();
     }
 
     public abstract class DbInterfaceBase : IDisposable, IDbInterface
@@ -359,6 +362,12 @@ namespace KCL.Db
                 DbEntity<TEntity>.EntityInfo.Table,
                 MakeWhereClause(where)
             ));
+        }
+
+        public DbQuery<TEntity> Select<TEntity>()
+            where TEntity : DbEntity<TEntity>, new()
+        {
+            return new DbQuery<TEntity>(this);
         }
 
         public void Dispose()

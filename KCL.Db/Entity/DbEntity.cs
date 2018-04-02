@@ -72,11 +72,13 @@ namespace KCL.Db.Entity
                         {
                             var dbKey = attribute as DbKey;
 
-                            if (EntityInfo.PrimaryKeys.ContainsKey(dbKey.Name))
+                            if (EntityInfo.PrimaryKeysByFieldName.ContainsKey(dbKey.Name))
                                 throw new EntityException("Error while registering entity {0} : duplicate primary key detected ({1})", entityType.Name, dbKey.Name);
 
                             var key = new EntityKey() { IsAutoIncremented = dbKey.IsAutoIncremented, Sequence = dbKey.Sequence, Name = dbKey.Name, PropertyName = property.Name, Type = property.PropertyType };
-                            EntityInfo.PrimaryKeys.Add(dbKey.Name, key);
+
+                            EntityInfo.AddEntityKey(key);
+
                             EntityInfo.Setters.Add(property.Name, CreateSetter(property.Name, property.PropertyType));
                             EntityInfo.Getters.Add(property.Name, CreateGetter(property.Name));
                             nbKeys++;
@@ -97,10 +99,11 @@ namespace KCL.Db.Entity
                             RegisterChildIfNeeded(property.PropertyType);
 
                             if (property.PropertyType.IsGenericParameter)
-                                EntityInfo.RelationsToMany.Add(dbRelation.TableKey, relation);
+                                EntityInfo.AddEntityRelationsToMany(relation);
                             else
                             {
-                                EntityInfo.RelationsToOne.Add(dbRelation.TableKey, relation);
+                                EntityInfo.AddEntityRelationsToOne(relation);
+
                                 EntityInfo.Setters.Add(property.Name, CreateSetter(property.Name, property.PropertyType));
                                 EntityInfo.Getters.Add(property.Name, CreateGetter(property.Name));
                             }
@@ -113,10 +116,11 @@ namespace KCL.Db.Entity
                             RegisterChildIfNeeded(property.PropertyType);
 
                             if (property.PropertyType.IsGenericParameter)
-                                EntityInfo.RelationsToMany.Add(dbRelation.TableKey, relation);
+                                EntityInfo.AddEntityRelationsToMany(relation);
                             else
                             {
-                                EntityInfo.RelationsToOne.Add(dbRelation.TableKey, relation);
+                                EntityInfo.AddEntityRelationsToOne(relation);
+
                                 EntityInfo.Setters.Add(property.Name, CreateSetter(property.Name, property.PropertyType));
                                 EntityInfo.Getters.Add(property.Name, CreateGetter(property.Name));
                             }
@@ -125,10 +129,13 @@ namespace KCL.Db.Entity
                         {
                             var dbField = attribute as DbField;
 
-                            if (EntityInfo.Fields.ContainsKey(dbField.Name))
+                            if (EntityInfo.FieldsByFieldName.ContainsKey(dbField.Name))
                                 throw new EntityException("Error while registering entity {0} : duplicate field name detected ({1})", entityType.Name, dbField.Name);
 
-                            EntityInfo.Fields.Add(dbField.Name, new EntityField() { Name = dbField.Name, Type = property.PropertyType, PropertyName = property.Name });
+                            var field = new EntityField() { Name = dbField.Name, Type = property.PropertyType, PropertyName = property.Name };
+
+                            EntityInfo.AddEntityField(field);
+
                             EntityInfo.Setters.Add(property.Name, CreateSetter(property.Name, property.PropertyType));
                             EntityInfo.Getters.Add(property.Name, CreateGetter(property.Name));
                         }
@@ -202,7 +209,7 @@ namespace KCL.Db.Entity
             EntityInfo tableInfo = EntityTablesInfos[table];
             var entity = tableInfo.Factory();
 
-            foreach (var field in tableInfo.PrimaryKeys)
+            foreach (var field in tableInfo.PrimaryKeysByFieldName)
             {
                 var key = prefix != null ? prefix + "_" + field.Key : field.Key;
 
@@ -212,7 +219,7 @@ namespace KCL.Db.Entity
                 }
             }
 
-            foreach (var field in tableInfo.Fields)
+            foreach (var field in tableInfo.FieldsByFieldName)
             {
                 var key = prefix != null ? prefix + "_" + field.Key : field.Key;
 
@@ -222,11 +229,11 @@ namespace KCL.Db.Entity
                 }
             }
 
-            foreach (var relation in tableInfo.RelationsToOne)
+            foreach (var relation in tableInfo.RelationsToOneByFieldName)
             {
                 if (columns.ContainsKey(relation.Key) && reader[relation.Key] != DBNull.Value && tableInfo.Setters.ContainsKey(relation.Value.PropertyName))
                 {
-                    var entityRelation = tableInfo.RelationsToOne[relation.Key];
+                    var entityRelation = tableInfo.RelationsToOneByFieldName[relation.Key];
                     tableInfo.Setters[relation.Value.PropertyName](entity, Parse(entityRelation.RelatedTable, reader, columns, entityRelation.Prefix));
                 }
             }
@@ -234,18 +241,33 @@ namespace KCL.Db.Entity
             return entity;
         }
 
+        internal static IEnumerable<string> GetFields(bool keys, bool fields, bool relations)
+        {
+            if (keys)
+                foreach (var kvp in EntityInfo.PrimaryKeysByFieldName)
+                    yield return kvp.Value.Name;
+
+            if (fields)
+                foreach (var kvp in EntityInfo.FieldsByFieldName)
+                    yield return kvp.Value.Name;
+
+            if (relations)
+                foreach (var kvp in EntityInfo.RelationsToOneByFieldName)
+                    yield return kvp.Value.TableKey;
+        }
+
         internal IEnumerable<KeyValuePair<string, object>> GetValues(bool keys, bool fields, bool relations)
         {
             if(keys)
-                foreach (var kvp in EntityInfo.PrimaryKeys)
+                foreach (var kvp in EntityInfo.PrimaryKeysByFieldName)
                     yield return new KeyValuePair<string, object>(kvp.Value.Name, GetValue<object>(kvp.Value.PropertyName));
 
             if(fields)
-                foreach (var kvp in EntityInfo.Fields)
+                foreach (var kvp in EntityInfo.FieldsByFieldName)
                     yield return new KeyValuePair<string, object>(kvp.Value.Name, GetValue<object>(kvp.Value.PropertyName));
 
             if(relations)
-                foreach (var kvp in EntityInfo.RelationsToOne)
+                foreach (var kvp in EntityInfo.RelationsToOneByFieldName)
                     yield return new KeyValuePair<string, object>(kvp.Value.TableKey, GetValue<object>(kvp.Value.PropertyName));
         }
     }

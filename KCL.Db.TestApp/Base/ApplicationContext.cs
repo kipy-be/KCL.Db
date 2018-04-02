@@ -14,13 +14,13 @@ namespace TestApp
 
         public static Config Config { get; private set; }
 
-        public static DbService DbService { get; private set; }
+        public static DbInterface DbService { get; private set; }
 
         public static void Init()
         {
             LoadConfig(GetConfigFile(CONF_FILENAME));
-            DbService = new DbService(Config.DbHost, Config.DbPort, Config.DbName, Config.DbUser, Config.DbPassword);
-            DbService.DbInterface.Connect();
+            DbService = new DbInterface(Config.DbHost, Config.DbPort, Config.DbName, Config.DbUser, Config.DbPassword);
+            DbService.Connect();
         }
 
         private static string ConfigPath => Path.Combine(Environment.GetEnvironmentVariable("ProgramData"), Name);

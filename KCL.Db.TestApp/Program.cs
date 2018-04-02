@@ -8,7 +8,7 @@ namespace KCL.Db.TestApp
 {
     public class Program
     {
-        private static DbService _db;
+        private static DbInterface _db;
 
         public static void Main(string[] args)
         {
@@ -43,55 +43,65 @@ namespace KCL.Db.TestApp
             Exit();
         }
 
+        private static Author Test2(int id)
+        {
+            return _db.Select<Author>()
+                            .Where(a => a.FirstName == "Jean" && a.Id == id)
+                            .GetOne();
+        }
+
         private static void Test()
         {
             var authorsService = new AuthorsService(_db);
             var articlesService = new ArticlesService(_db);
 
-            var authors = authorsService.GetAll();
-            var article = articlesService.GetFromId(1);
-            article.Title = "test";
+            var author = Test2(3);
+            author = Test2(52);
 
-            var author2 = new Author()
-            {
-                Nick = "truc",
-                FirstName = "Jean",
-                LastName = "Bon"
-            };
+            //var authors = authorsService.GetAll();
+            //var article = articlesService.GetFromId(1);
+            //article.Title = "test";
 
-            Console.WriteLine(author2.Id);
-
-            _db.DbInterface.Insert(author2);
-
-            author2.LastName = "Bla";
-            _db.DbInterface.Update(author2);
-
-            //_db.Delete(author2);
-
-            //_db.UpdateWhere<Author>(new Dictionary<string, object>
+            //var author2 = new Author()
             //{
-            //    { "firstname", "Thierry" }
-            //},
-            //new Dictionary<string, object>
+            //    Nick = "truc",
+            //    FirstName = "Jean",
+            //    LastName = "Bon"
+            //};
+
+            //Console.WriteLine(author2.Id);
+
+            //_db.Insert(author2);
+
+            //author2.LastName = "Bla";
+            //_db.Update(author2);
+
+            ////_db.Delete(author2);
+
+            ////_db.UpdateWhere<Author>(new Dictionary<string, object>
+            ////{
+            ////    { "firstname", "Thierry" }
+            ////},
+            ////new Dictionary<string, object>
+            ////{
+            ////    { "nick", "truc" }
+            ////});
+
+            //_db.DeleteWhere<Author>(new Dictionary<string, object>
             //{
             //    { "nick", "truc" }
             //});
 
-            _db.DbInterface.DeleteWhere<Author>(new Dictionary<string, object>
-            {
-                { "nick", "truc" }
-            });
+            //var transaction = _db.CreateTransaction();
+            //var author3 = new Author()
+            //{
+            //    Nick = "machin",
+            //    FirstName = "Pierre",
+            //    LastName = "Test"
+            //};
 
-            var transaction = _db.DbInterface.CreateTransaction();
-            var author3 = new Author()
-            {
-                Nick = "machin",
-                FirstName = "Pierre",
-                LastName = "Test"
-            };
-
-            _db.DbInterface.Insert(author3);
-            transaction.Commit();
+            //_db.Insert(author3);
+            //transaction.Commit();
         }
     }
 }

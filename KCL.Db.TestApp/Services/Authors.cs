@@ -6,13 +6,13 @@ namespace TestApp.Services
 {
     public class AuthorsService : ServiceBase
     {
-        public AuthorsService(DbService db)
+        public AuthorsService(DbInterface db)
             : base(db)
         {}
 
         public Author GetFromId(int id)
         {
-            return _db.DbInterface.ParseOne<Author>
+            return _db.ParseOne<Author>
             (
                 "SELECT " +
                     "a.id, " +
@@ -30,7 +30,7 @@ namespace TestApp.Services
 
         public List<Author> GetAll()
         {
-            return _db.DbInterface.ParseMany<Author>
+            return _db.ParseMany<Author>
             (
                 "SELECT " +
                     "a.id, " +
