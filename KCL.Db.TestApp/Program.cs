@@ -43,20 +43,14 @@ namespace KCL.Db.TestApp
             Exit();
         }
 
-        private static Author Test2(int id)
-        {
-            return _db.Select<Author>()
-                            .Where(a => a.FirstName == "Jean" && a.Id == id)
-                            .GetOne();
-        }
-
         private static void Test()
         {
             var authorsService = new AuthorsService(_db);
             var articlesService = new ArticlesService(_db);
 
-            var author = Test2(3);
-            author = Test2(52);
+            var articles =  _db.Select<Article>()
+                            .Where(a => a.Author.FirstName == "Jean")
+                            .GetMany();
 
             //var authors = authorsService.GetAll();
             //var article = articlesService.GetFromId(1);

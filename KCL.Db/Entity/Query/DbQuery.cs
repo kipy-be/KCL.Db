@@ -43,6 +43,11 @@ namespace KCL.Db.Entity.Query
             return _dbInterface.ParseOne<TEntity>(ToString(), null);
         }
 
+        public List<TEntity> GetMany()
+        {
+            return _dbInterface.ParseMany<TEntity>(ToString(), null);
+        }
+
         public DbQuery<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
         {
             var translator = new QueryTranslator<TEntity>();

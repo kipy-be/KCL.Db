@@ -34,7 +34,6 @@ namespace KCL.Db.Entity.Query
 
         private void Parse(Expression<Func<TEntity, bool>> expression)
         {
-            var param = expression.Parameters[0];
             var operation = (BinaryExpression)expression.Body;
 
             ParseExpression(operation);
